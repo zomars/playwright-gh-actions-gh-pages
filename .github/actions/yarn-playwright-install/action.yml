@@ -1,0 +1,32 @@
+name: Install playwright binaries
+description: "Install playwright, cache and restore if necessary"
+inputs:
+  only-restore:
+    required: false
+    default: false
+runs:
+  using: "composite"
+  steps:
+    - name: Get installed Playwright version
+      shell: bash
+      id: playwright-version
+      run: echo "PLAYWRIGHT_VERSION=$(node -e "console.log(require('./package.json').devDependencies['@playwright/test'])")" >> $GITHUB_ENV
+    - name: Cache playwright binaries
+      uses: actions/cache@v3
+      if: inputs.only-restore != 'true'
+      id: playwright-cache
+      with:
+        path: |
+          ~/.cache/ms-playwright
+        key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+    - name: Restore playwright binaries from cache
+      if: inputs.only-restore == 'true'
+      uses: actions/cache/restore@v3
+      id: playwright-cache
+      with:
+        path: |
+          ~/.cache/ms-playwright
+        key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+        fail-on-cache-miss: true
+    - run: yarn playwright install --with-deps
+      shell: bash
