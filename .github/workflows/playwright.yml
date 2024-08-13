@@ -70,6 +70,4 @@ jobs:
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: gh-pages
       - uses: ./.github/actions/publish-report
