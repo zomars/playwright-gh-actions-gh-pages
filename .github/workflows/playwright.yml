@@ -35,8 +35,7 @@ jobs:
           key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
       - run: yarn playwright install --with-deps
         if: steps.playwright-cache.outputs.cache-hit != 'true'
-      - run: yarn playwright install-deps
-        if: steps.playwright-cache.outputs.cache-hit != 'true'
+
   test:
     name: Test
     needs: [deps]
@@ -64,7 +63,7 @@ jobs:
           ~/.cache/ms-playwright
         key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
         fail-on-cache-miss: true
-    - run: yarn playwright install-deps
+    - run: yarn playwright install --with-deps
     - name: Run Playwright tests
       run: yarn playwright test --shard=${{ matrix.shard }}/${{ strategy.job-total }}
     - uses: actions/upload-artifact@v4
