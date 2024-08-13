@@ -64,7 +64,6 @@ jobs:
           ~/.cache/ms-playwright
         key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
         fail-on-cache-miss: true
-    - run: yarn playwright install --with-deps
     - run: yarn playwright install-deps
     - name: Run Playwright tests
       run: yarn playwright test --shard=${{ matrix.shard }}/${{ strategy.job-total }}
