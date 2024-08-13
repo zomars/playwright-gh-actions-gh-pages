@@ -54,14 +54,14 @@ jobs:
         retention-days: 30
 
   merge-reports:
-    # Merge reports after playwright-tests, even if some shards have failed
+    name: Merge reports
     if: ${{ !cancelled() }}
     needs: [test]
     uses: ./.github/workflows/merge-reports.yml
     secrets: inherit
 
   publish-report:
-    # Merge reports after playwright-tests, even if some shards have failed
+    name: Publish HTML report
     if: ${{ !cancelled() }}
     needs: [merge-reports]
     uses: ./.github/workflows/publish-report.yml
