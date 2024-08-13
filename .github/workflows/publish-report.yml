@@ -67,11 +67,11 @@ jobs:
           body: |
             <!-- GENERATED-E2E-RESULTS -->
             ## E2E results are ready!
-            - [Attempt #${{ github.run_attempt }} results][${{ steps.url.outputs.link }}]
+            - [Attempt #${{ github.run_attempt }} results](${{ steps.url.outputs.link }})
       - name: Update comment
         if: steps.fc.outputs.comment-id != ''
         uses: peter-evans/create-or-update-comment@v3
         with:
           comment-id: ${{ steps.fc.outputs.comment-id }}
           body: |
-            - [Attempt #${{ github.run_attempt }} results][${{ steps.url.outputs.link }}]
+            - [Attempt #${{ github.run_attempt }} results](${{ steps.url.outputs.link }})
