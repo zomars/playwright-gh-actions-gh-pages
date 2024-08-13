@@ -1,8 +1,5 @@
-name: Pubblish Playwirght reports
-
 on:
   workflow_call:
-
 jobs:
   publish-report:
     name: Publish HTML Report
@@ -48,3 +45,8 @@ jobs:
               exit 0
             fi
           done
+      - name: Output Report URL as Worfklow Annotation
+        run: |
+          FULL_HTML_REPORT_URL=https://zomars.github.io/playwright-gh-actions-gh-pages/$HTML_REPORT_URL_PATH
+
+          echo "::notice title=📋 Published Playwright Test Report::$FULL_HTML_REPORT_URL"
