@@ -2,8 +2,6 @@ on:
   workflow_call:
 jobs:
   publish-report:
-    name: Publish HTML Report
-    # using always() is not ideal here, because it would also run if the workflow was cancelled
     runs-on: ubuntu-latest
     continue-on-error: true
     env:
