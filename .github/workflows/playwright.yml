@@ -57,8 +57,9 @@ jobs:
     name: Merge reports
     if: ${{ !cancelled() }}
     needs: [test]
-    uses: ./.github/workflows/merge-reports.yml
-    secrets: inherit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/actions/merge-reports
 
   publish-report:
     name: Publish HTML report
