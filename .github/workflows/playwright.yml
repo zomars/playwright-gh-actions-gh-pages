@@ -70,15 +70,44 @@ jobs:
     - uses: actions/upload-artifact@v3
       if: always()
       with:
-        name: playwright-report-${{ matrix.shard }}
-        path: playwright-report/
+        name: blob-report-${{ matrix.shard }}
+        path: blob-report
         retention-days: 30
+
+
+  merge-reports:
+    # Merge reports after playwright-tests, even if some shards have failed
+    if: ${{ !cancelled() }}
+    needs: [test]
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 18
+    - name: Install dependencies
+      run: yarn
+    - name: Download blob reports from GitHub Actions Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        path: all-blob-reports
+        pattern: blob-report-*
+        merge-multiple: true
+    - name: Merge into HTML Report
+      run: yarn playwright merge-reports --reporter html ./all-blob-reports
+    - name: Upload HTML report
+      uses: actions/upload-artifact@v3
+      with:
+        name: html-report--attempt-${{ github.run_attempt }}
+        path: playwright-report
+        retention-days: 14
 
   publish_report:
     name: Publish HTML Report
     # using always() is not ideal here, because it would also run if the workflow was cancelled
-    if: "success() || needs.test.result == 'failure'"
-    needs: [test]
+    if: ${{ !cancelled() }}
+    needs: [merge-reports]
     runs-on: ubuntu-latest
     continue-on-error: true
     env:
@@ -97,6 +126,7 @@ jobs:
       - name: Download zipped HTML report
         uses: actions/download-artifact@v3
         with:
+          name: html-report--attempt-${{ github.run_attempt }}
           path: ${{ env.HTML_REPORT_URL_PATH }}
       - name: Push HTML Report
         timeout-minutes: 3

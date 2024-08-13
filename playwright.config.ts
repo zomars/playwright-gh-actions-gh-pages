@@ -7,8 +7,8 @@ const config: PlaywrightTestConfig = {
   fullyParallel: true, 
   // Helpful for uncontrollable flaky tests, which are tests, occasionally failing for various reasons
   retries: 3, 
-  // Generates a HTML report to ./playwright-report/
-  reporter: 'html', 
+  // https://playwright.dev/docs/test-sharding#merging-reports-from-multiple-shards
+  reporter: process.env.CI ? 'blob' : 'html',
   use: {
     // Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer
     trace: 'on-first-retry',
