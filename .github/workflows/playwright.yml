@@ -37,10 +37,9 @@ jobs:
         path: |
           ~/.cache/ms-playwright
         key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-    - run: npm ci
-    - run: npx playwright install --with-deps
+    - run: yarn playwright install --with-deps
       if: steps.playwright-cache.outputs.cache-hit != 'true'
-    - run: npx playwright install-deps
+    - run: yarn playwright install-deps
       if: steps.playwright-cache.outputs.cache-hit != 'true'
     - name: Run Playwright tests
       run: yarn playwright test --shard=${{ matrix.shard }}/${{ strategy.job-total }}
