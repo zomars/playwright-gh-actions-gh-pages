@@ -57,17 +57,12 @@ jobs:
     name: Merge reports
     if: ${{ !cancelled() }}
     needs: [test]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/merge-reports
+    uses: ./.github/workflows/merge-reports.yml
+    secrets: inherit
 
   publish-report:
     name: Publish HTML report
     if: ${{ !cancelled() }}
     needs: [merge-reports]
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    steps:
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/publish-report
+    uses: ./.github/workflows/publish-report.yml
+    secrets: inherit
