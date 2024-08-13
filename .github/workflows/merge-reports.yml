@@ -1,8 +1,5 @@
-name: Merge Playwirght reports
-
 on:
   workflow_call:
-
 jobs:
   merge-reports:
     runs-on: ubuntu-latest
