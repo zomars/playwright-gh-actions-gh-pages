@@ -80,14 +80,10 @@ jobs:
     if: "success() || needs.test.result == 'failure'"
     needs: [test]
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        shard: [1, 2, 3]
     continue-on-error: true
     env:
       # Unique URL path for each workflow run attempt
-      HTML_REPORT_URL_PATH: reports/${{ github.ref_name }}/${{ github.run_id }}/${{ github.run_attempt }}/${{ matrix.shard }}
+      HTML_REPORT_URL_PATH: reports/${{ github.ref_name }}/${{ github.run_id }}/${{ github.run_attempt }}
     steps:
       - name: Checkout GitHub Pages Branch
         uses: actions/checkout@v4
@@ -101,7 +97,6 @@ jobs:
       - name: Download zipped HTML report
         uses: actions/download-artifact@v3
         with:
-          name: playwright-report-${{ matrix.shard }}
           path: ${{ env.HTML_REPORT_URL_PATH }}
       - name: Push HTML Report
         timeout-minutes: 3
@@ -109,7 +104,7 @@ jobs:
         # this is necessary when this job running at least twice at the same time (e.g. through two pushes at the same time)
         run: |
           git add .
-          git commit -m "workflow: add HTML report for run-id ${{ github.run_id }} (attempt:  ${{ github.run_attempt }} shard: ${{ matrix.shard }}/${{ strategy.job-total }})"
+          git commit -m "workflow: add HTML report for run-id ${{ github.run_id }} (attempt:  ${{ github.run_attempt }})"
 
           while true; do
             git pull --rebase
