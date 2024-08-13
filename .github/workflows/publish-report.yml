@@ -1,8 +1,5 @@
-name: Pubblish Playwirght reports
-
 on:
   workflow_call:
-
 jobs:
   publish-report:
     name: Publish HTML Report
@@ -48,3 +45,35 @@ jobs:
               exit 0
             fi
           done
+      - name: Output Report URL as Worfklow Annotation
+        id: url
+        run: |
+          FULL_HTML_REPORT_URL=https://zomars.github.io/playwright-gh-actions-gh-pages/$HTML_REPORT_URL_PATH
+
+          echo "::notice title=📋 Published Playwright Test Report::$FULL_HTML_REPORT_URL"
+          echo "link=$FULL_HTML_REPORT_URL" >> $GITHUB_OUTPUT
+
+      - name: Find Comment
+        uses: peter-evans/find-comment@v2
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: 'github-actions[bot]'
+          body-includes: <!-- GENERATED-E2E-RESULTS -->
+
+      - name: Create comment
+        if: steps.fc.outputs.comment-id == ''
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            <!-- GENERATED-E2E-RESULTS -->
+            ## E2E results are ready!
+            - [Attempt #${{ github.run_attempt }} results][${{ steps.url.outputs.link }}]
+      - name: Update comment
+        if: steps.fc.outputs.comment-id != ''
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          body: |
+            - [Attempt #${{ github.run_attempt }} results][${{ steps.url.outputs.link }}]
