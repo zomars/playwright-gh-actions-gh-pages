@@ -6,7 +6,7 @@
   "author": "Yusuf Aran <yusuf.aran@sellwerk.de>",
   "license": "MIT",
   "devDependencies": {
-    "@playwright/test": "^1.25.1"
+    "@playwright/test": "^1.46.0"
   },
   "scripts": {}
 }
