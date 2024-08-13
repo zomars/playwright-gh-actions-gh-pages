@@ -14,10 +14,10 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
     - uses: actions/setup-node@v2
       with:
-        node-version: '14.x'
+        node-version: '18.x'
     - name: Install dependencies
       run: yarn
     - name: Install Playwright Browsers
@@ -43,7 +43,7 @@ jobs:
       HTML_REPORT_URL_PATH: reports/${{ github.ref_name }}/${{ github.run_id }}/${{ github.run_attempt }}
     steps:
       - name: Checkout GitHub Pages Branch
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           ref: gh-pages
       - name: Set Git User
