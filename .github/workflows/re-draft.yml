@@ -13,15 +13,14 @@ permissions:
   statuses: write
 
 jobs:
-
-  run_on_workflow_a_success:
+  workflow-succeeded:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
-      - name: Run on workflow A success
-        run: echo "Workflow A completes successfully"
+      - name: Changes were requested
+        run: echo "Changes were requested"
 
-  download_context_artifact:
+  download-context:
     runs-on: ubuntu-latest
     steps:
       - name: 'Download artifact'
@@ -63,18 +62,9 @@ jobs:
     outputs:
       pr_number: ${{fromJSON(steps.return-parsed-json.outputs.result).pr_number}}
 
-  log_context_values:
-    needs:
-      - download_context_artifact
-    runs-on: ubuntu-latest
-    steps:
-      - name: 'Log Context Values'
-        run: |
-          echo "${{ needs.download_context_artifact.outputs.pr_number }}"
-
   re-draft:
     needs:
-      - download_context_artifact
+      - download-context
     permissions:
       contents: write
       issues: write
@@ -88,7 +78,7 @@ jobs:
         with:
           script: |
             async function getPullRequestId() {
-              const pull_number = ${{ needs.download_context_artifact.outputs.pr_number }}; 
+              const pull_number = ${{ needs.download-context.outputs.pr_number }}; 
               const pullRequest = await github.rest.pulls.get({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
