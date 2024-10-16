@@ -13,14 +13,8 @@ permissions:
   statuses: write
 
 jobs:
-  workflow-succeeded:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Changes were requested
-        run: echo "Changes were requested"
-
   download-context:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: 'Download artifact'
