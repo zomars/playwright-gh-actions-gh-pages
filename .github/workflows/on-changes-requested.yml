@@ -4,16 +4,13 @@ on:
     types: [submitted]
 
 jobs:
-  changes_requested:
+  changes-requested:
     if: github.event.review.state == 'changes_requested'
     runs-on: ubuntu-latest
     steps:
       - name: Explanation
-        run: echo "this is a dummy workflow that triggers a workflow_run; it's necessary because otherwise the repo secrets will not be in scope for externally forked pull requests"
-  job_producing_data:  
-    runs-on: ubuntu-latest
-    steps:
-      - name: Some Step 
+        run: echo "This workflow triggers a workflow_run; it's necessary because otherwise the repo secrets aren't available for 'pull_request_review' events from externally forked pull requests"
+      - name: Save PR number to context.json
         run: |
             printf '{
               "pr_number": ${{ github.event.pull_request.number }}

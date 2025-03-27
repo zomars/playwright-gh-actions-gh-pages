@@ -12,24 +12,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deps:
-    name: Install dependencies
-    timeout-minutes: 60
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '18.x'
-      - name: Install dependencies
-        run: yarn
-      - uses: ./.github/actions/yarn-playwright-install
-
   test:
     name: Test
-    needs: [deps]
     timeout-minutes: 60
     runs-on: ubuntu-latest
+      image: mcr.microsoft.com/playwright:v1.46.0-jammy 
+    container:
+      options: --ipc=host
     strategy:
       fail-fast: false
       matrix:
@@ -41,9 +30,6 @@ jobs:
         node-version: '18.x'
     - name: Install dependencies
       run: yarn
-    - uses: ./.github/actions/yarn-playwright-install
-      with:
-        only-restore: true
     - name: Run Playwright tests
       run: yarn playwright test --shard=${{ matrix.shard }}/${{ strategy.job-total }}
     - uses: actions/upload-artifact@v4
