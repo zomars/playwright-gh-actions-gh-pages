@@ -34,7 +34,11 @@ jobs:
         node-version: '18.x'
     - name: Install dependencies
       run: yarn
+    # Firefox requires HOME to be set at the step level to ensure it uses the correct directory
+    # when launching the browser process
     - name: Run Playwright tests
+      env:
+        HOME: /root
       run: yarn playwright test --shard=${{ matrix.shard }}/${{ strategy.job-total }}
     - uses: actions/upload-artifact@v4
       if: always()
