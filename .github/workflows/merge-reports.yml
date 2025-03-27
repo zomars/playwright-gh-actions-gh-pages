@@ -3,13 +3,11 @@ on:
 jobs:
   merge-reports:
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.42.1-jammy
+      options: --ipc=host
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 18
-    - name: Install dependencies
-      run: yarn
     - name: Download blob reports from GitHub Actions Artifacts
       uses: actions/download-artifact@v4
       with:
@@ -17,7 +15,7 @@ jobs:
         pattern: blob-report-*
         merge-multiple: true
     - name: Merge into HTML Report
-      run: yarn playwright merge-reports --reporter html ./all-blob-reports
+      run: npx playwright merge-reports --reporter html ./all-blob-reports
     - name: Upload HTML report
       uses: actions/upload-artifact@v4
       with:
