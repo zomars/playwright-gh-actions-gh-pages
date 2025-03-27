@@ -16,8 +16,8 @@ jobs:
     name: Test
     timeout-minutes: 60
     runs-on: ubuntu-latest
-      image: mcr.microsoft.com/playwright:v1.46.0-jammy
     container:
+      image: mcr.microsoft.com/playwright:v1.46.0-jammy
       options: --ipc=host
     strategy:
       fail-fast: false
