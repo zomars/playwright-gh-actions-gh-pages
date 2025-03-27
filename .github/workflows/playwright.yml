@@ -19,6 +19,10 @@ jobs:
     container:
       image: mcr.microsoft.com/playwright:v1.46.0-jammy
       options: --ipc=host
+      # Firefox requires the $HOME directory to be owned by the current user
+      # Setting HOME=/root ensures Firefox can launch properly in the container
+      env:
+        HOME: /root
     strategy:
       fail-fast: false
       matrix:
